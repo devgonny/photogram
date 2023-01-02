@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cos.photogramstart.domain.user.User;
 import com.cos.photogramstart.service.AuthService;
@@ -44,7 +45,7 @@ public class AuthController {
     }
     // 회원가입 기능
     @PostMapping("/auth/signup")
-    public String signup(@Valid SignupDto signupDto, BindingResult bindingResult) {
+    public @ResponseBody String signup(@Valid SignupDto signupDto, BindingResult bindingResult) {
     	
     	if(bindingResult.hasErrors()) {
     		Map<String, String> errorMap = new HashMap<>();
@@ -53,16 +54,17 @@ public class AuthController {
     			errorMap.put(error.getField(), error.getDefaultMessage());
     			System.out.println(error.getDefaultMessage());
     		}
+    		return "오류발생";
+    	}else {
+    		// User Object에 SignupDto 데이터를 삽입하려고 한다.
+            // User 오브젝트에 signupDto에서 방금 만들었던 toEntity 데이터를 넣어주자.
+            User user = signupDto.toEntity();
+             //log.info(user.toString());
+
+            User userEntity = authService.회원가입(user);
+            System.out.println(userEntity);
+            
+            return "/auth/signin"; // 회원가입이 완료되면 로그인페이지로 이동할것이다.
     	}
-        // User Object에 SignupDto 데이터를 삽입하려고 한다.
-        // User 오브젝트에 signupDto에서 방금 만들었던 toEntity 데이터를 넣어주자.
-        User user = signupDto.toEntity();
-         //log.info(user.toString());
-
-        User userEntity = authService.회원가입(user);
-        System.out.println(userEntity);
-
-        return "/auth/signin"; // 회원가입이 완료되면 로그인페이지로 이동할것이다.
     }
-
 }

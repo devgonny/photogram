@@ -10,6 +10,7 @@ import lombok.Data;
 @Data
 public class SignupDto {
 	@Size(min = 3, max = 20)
+	@NotBlank
     private String username;
 	@NotBlank
     private String password;
