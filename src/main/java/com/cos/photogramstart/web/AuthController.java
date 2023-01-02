@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cos.photogramstart.domain.user.User;
+import com.cos.photogramstart.handler.ex.CustomValidationException;
 import com.cos.photogramstart.service.AuthService;
 import com.cos.photogramstart.web.dto.auth.SignupDto;
 
@@ -45,16 +46,15 @@ public class AuthController {
     }
     // 회원가입 기능
     @PostMapping("/auth/signup")
-    public @ResponseBody String signup(@Valid SignupDto signupDto, BindingResult bindingResult) {
+    public String signup(@Valid SignupDto signupDto, BindingResult bindingResult) {
     	
     	if(bindingResult.hasErrors()) {
     		Map<String, String> errorMap = new HashMap<>();
     		
     		for(FieldError error : bindingResult.getFieldErrors()) {
     			errorMap.put(error.getField(), error.getDefaultMessage());
-    			System.out.println(error.getDefaultMessage());
     		}
-    		return "오류발생";
+    		throw new CustomValidationException("유효성 검사 실패", errorMap);
     	}else {
     		// User Object에 SignupDto 데이터를 삽입하려고 한다.
             // User 오브젝트에 signupDto에서 방금 만들었던 toEntity 데이터를 넣어주자.
