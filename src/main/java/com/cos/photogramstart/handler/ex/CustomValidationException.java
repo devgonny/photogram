@@ -4,7 +4,8 @@ import java.util.Map;
 
 public class CustomValidationException extends RuntimeException{
 	
-	// 객체를 구분할 때(몰라도됨)
+	// 객체를 구분하기 위해 시리얼넘버를 넣어주는것.(몰라도 됨)
+    // JVM을 위해 걸어주는 것이다.
 	private static final long serialVersionUID = 1L;
 	
 	private Map<String, String> errorMap;
